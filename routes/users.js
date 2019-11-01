@@ -8,4 +8,5 @@ router.get('/signup', (req, res, next) => {
 router.get('/login', (req, res, next) => {
   res.render('login',{title: "ログイン"});
 });
+
 module.exports = router;
