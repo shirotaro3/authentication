@@ -7,14 +7,20 @@ a {
   color: #00B7FF;
 }
 
+.float-right {
+  float: right;
+}
+
 .text-center {
   text-align: center;
 }
 
-.text-right {
-  text-align: right;
+.user-form {
+  width: 230px;
+  margin: 0 auto;
+  border: 1px solid grey;
+  padding: 20px;
 }
-
-.text-left {
-  text-align: left;
+.form {
+  margin-bottom: 5px;
 }
