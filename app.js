@@ -18,6 +18,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// sessionの設定
 app.use(session({
   secret: 'secretkey',
   resave: false,
@@ -26,10 +28,20 @@ app.use(session({
     maxAge: null
   }
 }));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+// 認証用関数
+var requireSignin = (req, res, next) => {
+  if(req.session.user){
+    next();
+  }else{
+    res.redirect('users/login')
+  }
+};
+
 app.use('/users', usersRouter);
+app.use('/', requireSignin, indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

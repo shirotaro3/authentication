@@ -14,13 +14,21 @@ a {
 .text-center {
   text-align: center;
 }
+.text-right {
+  text-align: right;
+}
 
 .user-form {
   width: 230px;
   margin: 0 auto;
   border: 1px solid grey;
-  padding: 20px;
+  padding: 25px 20px;
+  border-radius: 10px;
 }
 .form {
   margin-bottom: 5px;
+}
+.links {
+  margin-top: -15px;
+  font-size: .9em;
 }
