@@ -3,6 +3,6 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.render('index', { title: 'Index' });
+  res.render('index', { title: 'Chat room' });
 });
 module.exports = router;

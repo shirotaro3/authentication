@@ -9,8 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: true,
         len: [2,10],
-        // 半角英数字+全角文字
-        is: /[\u0030-\u0039\u0041-\u005a\u0061-\u007a\u30a0-\u30ff\u3040-\u309f\u3005-\u3006\u30e0-\u9fcf]/g
+        isAlphanumeric: true
       }
     },
     userEmail: {
@@ -22,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         len: [2,30]
       },
       set(value) {
-        return this.setDataValue('userEmail', value);
+        return this.setDataValue('userEmail', value.toString().toLowerCase());
       }
     },
     userPasswordHash: {
@@ -42,8 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true
       },
       set(value) {
-        let pass = toHash(value);
-        this.setDataValue('userPasswordHash',pass);
+        this.setDataValue('userPasswordHash',value);
       }
     }
   }, {});

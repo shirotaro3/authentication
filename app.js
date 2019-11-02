@@ -25,7 +25,9 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: null
+    httpOnly: true,
+    secure: false,
+    maxAge: 1000 * 60 * 20
   }
 }));
 
@@ -36,9 +38,9 @@ const requireSignin = (req, res, next) => {
   if(req.session.user){
     next();
   }else{
-    res.redirect('/users/login')
+    res.redirect('/users/login');
   }
-};
+}
 
 app.use('/users', usersRouter);
 app.use('/', requireSignin, indexRouter);

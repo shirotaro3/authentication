@@ -1,17 +1,18 @@
 extends layout
 
 block content
-  h1.text-center= title
+  h1.text-center ログイン
   .user-form
-    form(action="/users/" method="post")
+    .error-messages= error
+    form(action="/users/login" method="post")
       .form
-        label(for="user_name") メールアドレス：
+        label(for="user_email") メールアドレス：
         .float-right
-          input(id="user_name" type="text" name="name_field")
+          input(id="user_email" type="text" value=email name="email")
       .form
         label(for="user_password") パスワード：
         .float-right
-          input(id="user_password" type="password" name="password_field")
+          input(id="user_password" type="password" name="password")
       .text-center
         input(type="submit" value="認証")
       .text-right.links

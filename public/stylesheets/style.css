@@ -35,3 +35,8 @@ a:hover {
   margin-top: -15px;
   font-size: .9em;
 }
+.error-messages {
+  color: red;
+  margin-bottom: 5px;
+  text-align: center;
+}
