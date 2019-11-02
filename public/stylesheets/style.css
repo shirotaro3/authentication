@@ -6,6 +6,9 @@ body {
 a {
   color: #00B7FF;
 }
+a:hover {
+  color: pink;
+}
 
 .float-right {
   float: right;
@@ -19,9 +22,9 @@ a {
 }
 
 .user-form {
-  width: 230px;
+  width: 250px;
   margin: 0 auto;
-  border: 1px solid grey;
+  border: 1px solid lightgrey;
   padding: 25px 20px;
   border-radius: 10px;
 }

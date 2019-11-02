@@ -3,15 +3,23 @@ extends layout
 block content
   h1.text-center= title
   .user-form
-    form(action="/users/" method="post")
+    form(action="/users/signup" method="post")
       .form
         label(for="user_name") 名前：
         .float-right
-          input(id="user_name" type="text" name="name_field")
+          input(id="user_name" type="text" name="name")
+      .form
+        label(for="user_email") メールアドレス：
+        .float-right
+          input(id="user_email" type="email" name="email")
       .form
         label(for="user_password") パスワード：
         .float-right
-          input(id="user_password" type="password" name="password_field")
+          input(id="user_password" type="password" name="password")
+      .form
+        label(for="user_password_confirmation") パスワード確認：
+        .float-right
+          input(id="user_password_confirmation" type="password" name="password_confirmation")
       .text-center
         input(type="submit" value="登録")
       .text-right.links
