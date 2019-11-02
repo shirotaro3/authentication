@@ -12,6 +12,12 @@ router.get('/login', (req, res, next) => {
   res.render('login',{title: "ログイン"});
 });
 
+// [post] logout
+router.post('/logout', (req, res, next) => {
+  delete req.session.user
+  res.redirect('/users/login')
+})
+
 // [post] signup
 router.post('/signup', (req, res, next) => {
   console.log(req.body)
@@ -21,7 +27,10 @@ router.post('/signup', (req, res, next) => {
     password: req.body.password,
     passwordConfirmation: req.body.password_confirmation
   })
-  .then(() => {
+  .then((result) => {
+    console.log(result)
+    let email = result.dataValues.userEmail;
+    req.session.user = email;
     res.redirect('/')
   })
   .catch((error) => {

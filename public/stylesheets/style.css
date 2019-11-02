@@ -22,14 +22,14 @@ a:hover {
 }
 
 .user-form {
-  width: 250px;
+  width: 300px;
   margin: 0 auto;
   border: 1px solid lightgrey;
   padding: 25px 20px;
   border-radius: 10px;
 }
 .form {
-  margin-bottom: 5px;
+  margin-bottom: 15px;
 }
 .links {
   margin-top: -15px;
@@ -37,6 +37,24 @@ a:hover {
 }
 .error-messages {
   color: red;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   text-align: center;
+}
+
+.chat-room {
+  width: 500px;
+  max-width: 90%;
+  height: 700px;
+  max-height: 60vh;
+  border: 1px solid lightgrey;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 10px;
+  overflow: scroll
+}
+.chat-links {
+  width: 500px;
+  max-width: 90%;
+  padding: 10px;
+  margin: 0 auto;
 }
