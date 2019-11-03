@@ -28,7 +28,6 @@ router.post('/signup', (req, res, next) => {
     passwordConfirmation: req.body.password_confirmation
   })
   .then((result) => {
-    console.log(result)
     let email = result.dataValues.userEmail;
     req.session.user = email;
     res.redirect('/')
@@ -47,27 +46,35 @@ router.post('/signup', (req, res, next) => {
 router.post('/login', (req, res, next) => {
   let email = req.body.email
   let password = req.body.password
-  models.User.findOne({
-    where: {userEmail: email}
-  })
-  .then((user) => {
-    if(user.userPasswordHash === password){
-      req.session.user = email;
-      res.redirect('/')
-    }else{
-      console.log('Wrong password.')
-      res.render('login',{
-        email: email,
-        error: "認証に失敗しました。"
-      })
-    }
-  })
-  .catch((error) => {
-    console.error(error.message);
+  // 認証失敗時のレスポンス
+  const authFailure = () => {
     res.render('login',{
       email: email,
       error: "認証に失敗しました。"
     })
+  }
+  models.User.findOne({
+    where: {userEmail: email}
+  })
+  .then((user) => {
+    if(user){
+      user.authenticate(password, (result) => {
+        if(result === true){
+          req.session.user = email
+          res.redirect('/')
+        }else{
+          console.log('Wrong password')
+          authFailure()
+        }
+      })
+    }else{
+      console.log('User not found');
+      authFailure()
+    }
+  })
+  .catch((error) => {
+    console.error(error.message);
+    authFailure()
   })
 })
 module.exports = router;
