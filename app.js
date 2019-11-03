@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const logger = require('morgan');
+const FileStore = require('session-file-store')(session);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -20,10 +21,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // sessionの設定
+let fileStoreOptions = {};
 app.use(session({
   secret: 'secretkey',
+  name: 'sessionId',
   resave: false,
   saveUninitialized: false,
+  store: new FileStore(fileStoreOptions),
   cookie: {
     httpOnly: true,
     secure: false,

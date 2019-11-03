@@ -14,8 +14,9 @@ router.get('/login', (req, res, next) => {
 
 // [post] logout
 router.post('/logout', (req, res, next) => {
-  delete req.session.user
-  res.redirect('/users/login')
+  req.session.destroy();
+  res.clearCookie('sessionId');
+  res.redirect('/users/login');
 })
 
 // [post] signup
@@ -28,8 +29,8 @@ router.post('/signup', (req, res, next) => {
     passwordConfirmation: req.body.password_confirmation
   })
   .then((result) => {
-    let email = result.dataValues.userEmail;
-    req.session.user = email;
+    let userName = result.dataValues.userName;
+    req.session.user = userName;
     res.redirect('/')
   })
   .catch((error) => {
@@ -60,7 +61,7 @@ router.post('/login', (req, res, next) => {
     if(user){
       user.authenticate(password, (result) => {
         if(result === true){
-          req.session.user = email
+          req.session.user = user.userName
           res.redirect('/')
         }else{
           console.log('Wrong password')
