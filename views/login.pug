@@ -15,5 +15,6 @@ block content
           input(id="user_password" type="password" name="password")
       .text-center
         input(type="submit" value="認証")
-      .text-right.links
-        a(href="/users/signup") 新規登録
+        input(type="hidden" name="_csrf" value=csrfToken)
+    .text-right.links
+      a(href="/users/signup") 新規登録

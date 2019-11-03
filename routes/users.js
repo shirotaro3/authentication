@@ -1,15 +1,20 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const router = express.Router();
+const csrf = require('csurf');
 const models = require('../models');
 
+const csrfProtection = csrf({ cookie: true });
+const parseForm = express.urlencoded({ extended: false })
+
 // [get] signup
-router.get('/signup', (req, res, next) => {
-  res.render('signup',{title: "新規登録"});
+router.get('/signup', csrfProtection, (req, res, next) => {
+  res.render('signup',{title: "新規登録", csrfToken: req.csrfToken() });
 });
 
 // [get] login
-router.get('/login', (req, res, next) => {
-  res.render('login',{title: "ログイン"});
+router.get('/login', csrfProtection, (req, res, next) => {
+  res.render('login',{title: "ログイン", csrfToken: req.csrfToken() });
 });
 
 // [post] logout
@@ -20,7 +25,7 @@ router.post('/logout', (req, res, next) => {
 })
 
 // [post] signup
-router.post('/signup', (req, res, next) => {
+router.post('/signup', parseForm, csrfProtection, (req, res, next) => {
   console.log(req.body)
   models.User.create({
     userName: req.body.name,
@@ -44,10 +49,10 @@ router.post('/signup', (req, res, next) => {
 })
 
 // [post] login
-router.post('/login', (req, res, next) => {
+router.post('/login', parseForm, csrfProtection, (req, res, next) => {
   let email = req.body.email
   let password = req.body.password
-  // 認証失敗時のレスポンス
+  // 認証失敗時の処理
   const authFailure = () => {
     res.render('login',{
       email: email,
