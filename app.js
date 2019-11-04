@@ -2,14 +2,21 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const session = require('express-session');
+const expressSession = require('express-session');
 const logger = require('morgan');
-const FileStore = require('session-file-store')(session);
+const FileStore = require('session-file-store')(expressSession);
+const helmet = require('helmet');
+const socketIo = require('socket.io');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
-let app = express();
+const app = express();
+
+const io = socketIo();
+app.io = io
+
+app.use(helmet());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,8 +28,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // sessionの設定
-let fileStoreOptions = {};
-app.use(session({
+const fileStoreOptions = {};
+const session = (expressSession({
   secret: 'secretkey',
   name: 'sessionId',
   resave: false,
@@ -31,8 +38,15 @@ app.use(session({
   cookie: {
     httpOnly: true,
     secure: false,
-    maxAge: 1000 * 60 * 20
+    maxAge: 1000 * 60 * 60
   }
+}));
+app.use(session);
+
+// io-session config
+const sharedsession = require('express-socket.io-session');
+io.use(sharedsession(session, {
+  autoSave: true
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -45,7 +59,6 @@ const requireSignin = (req, res, next) => {
     res.redirect('/users/login');
   }
 }
-
 app.use('/users', usersRouter);
 app.use('/', requireSignin, indexRouter);
 
@@ -64,5 +77,19 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+io.on('connection', (socket) => {
+  socket.user = socket.handshake.session.user
+  io.emit('info logs', socket.user+'さんが入室しました。');
+
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', socket.user+ "：" +msg);
+  })
+
+  // disconnect
+  socket.on('disconnect', () => {
+    io.emit('info logs', socket.user+'さんが退室しました。');
+  })
+})
 
 module.exports = app;

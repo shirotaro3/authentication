@@ -1,5 +1,4 @@
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const router = express.Router();
 const csrf = require('csurf');
 const models = require('../models');
@@ -43,6 +42,7 @@ router.post('/signup', parseForm, csrfProtection, (req, res, next) => {
     res.render('signup', {
       name: req.body.name,
       email: req.body.email,
+      csrfToken: req.csrfToken(),
       error: "登録に失敗しました。"
     })
   })
@@ -56,6 +56,7 @@ router.post('/login', parseForm, csrfProtection, (req, res, next) => {
   const authFailure = () => {
     res.render('login',{
       email: email,
+      csrfToken: req.csrfToken(),
       error: "認証に失敗しました。"
     })
   }

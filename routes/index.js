@@ -6,4 +6,6 @@ const io = require('socket.io');
 router.get('/', (req, res, next) => {
   res.render('index', { title: 'Chat room', user: req.session.user });
 });
+
+
 module.exports = router;

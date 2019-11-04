@@ -9,6 +9,14 @@ a {
 a:hover {
   color: pink;
 }
+ul {
+  padding: 0;
+}
+li {
+  list-style: none;
+  padding: 0;
+}
+
 
 .float-right {
   float: right;
@@ -44,8 +52,6 @@ a:hover {
 .chat-room {
   width: 500px;
   max-width: 90%;
-  height: 700px;
-  max-height: 60vh;
   border: 1px solid lightgrey;
   margin: 0 auto;
   padding: 20px;
@@ -57,4 +63,16 @@ a:hover {
   max-width: 90%;
   padding: 10px;
   margin: 0 auto;
+}
+.chat-logs {
+  overflow: scroll;
+  height: 700px;
+  max-height: 58vh;
+}
+.chat-form {
+  width: 70%;
+}
+.info-log {
+  color: darkgreen;
+  font-size: 0.9em;
 }
