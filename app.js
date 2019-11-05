@@ -25,7 +25,7 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser('secretkey'));
 
 // sessionの設定
 const fileStoreOptions = {};
@@ -34,6 +34,7 @@ const session = (expressSession({
   name: 'sessionId',
   resave: false,
   saveUninitialized: false,
+  rolling: true,
   store: new FileStore(fileStoreOptions),
   cookie: {
     httpOnly: true,
@@ -51,16 +52,9 @@ io.use(sharedsession(session, {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 認証用関数
-const requireSignin = (req, res, next) => {
-  if(req.session.user){
-    next();
-  }else{
-    res.redirect('/users/login');
-  }
-}
+
 app.use('/users', usersRouter);
-app.use('/', requireSignin, indexRouter);
+app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -78,17 +72,44 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+// io
 io.on('connection', (socket) => {
-  socket.user = socket.handshake.session.user
-  io.emit('info logs', socket.user+'さんが入室しました。');
 
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', socket.user+ "：" +msg);
+  // セッションのユーザー名をsocketに保存
+  socket.userName = socket.handshake.session.user
+
+  socket.use((packet, next) => {
+    if(socket.handshake.session.user){return next();}
+    next(new Error('Session does not exist'))
   })
 
-  // disconnect
+  // リスト更新関数
+  const updateRoster = () => {
+    const clients = io.of('/').connected;
+    
+    let ro = [];
+    for(key in clients){
+      ro.unshift(clients[key].userName);
+    }
+    roster = Array.from(new Set(ro));
+    io.emit('roster', roster);
+  };
+
+  // 入室時
+  updateRoster()
+
+  // 発言
+  socket.on('chat message', (msg) => {
+    const now = new Date();
+    const hh = ('0'+now.getHours()).slice(-2);
+    const mm = ('0'+now.getMinutes()).slice(-2);
+    const timeStamp = (hh + ':' + mm);
+    io.emit('chat message', '['+timeStamp+']　'+socket.userName+ '：' +msg);
+  });
+
+  // 退室時
   socket.on('disconnect', () => {
-    io.emit('info logs', socket.user+'さんが退室しました。');
+    updateRoster();
   })
 })
 

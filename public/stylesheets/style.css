@@ -9,12 +9,16 @@ a {
 a:hover {
   color: pink;
 }
+p {
+  margin: 0;
+  padding: 0;
+}
 ul {
   padding: 0;
+  margin: 0;
 }
 li {
   list-style: none;
-  padding: 0;
 }
 
 
@@ -64,15 +68,23 @@ li {
   padding: 10px;
   margin: 0 auto;
 }
+.chat-box {
+  padding: 15px 0;
+  display: flex;
+}
 .chat-logs {
   overflow: scroll;
   height: 700px;
   max-height: 58vh;
+  width: 80%;
+}
+.roster {
+  width:18%;
 }
 .chat-form {
   width: 70%;
 }
 .info-log {
-  color: darkgreen;
+  color: grey;
   font-size: 0.9em;
 }

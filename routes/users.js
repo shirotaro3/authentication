@@ -66,9 +66,16 @@ router.post('/login', parseForm, csrfProtection, (req, res, next) => {
   .then((user) => {
     if(user){
       user.authenticate(password, (result) => {
+        // ログイン成功
         if(result === true){
           req.session.user = user.userName
+          const ref = req.cookies.ref
+          console.log(ref);
+          if(ref){
+            res.redirect(ref);
+          }else{
           res.redirect('/')
+          }
         }else{
           console.log('Wrong password')
           authFailure()
