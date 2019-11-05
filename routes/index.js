@@ -9,6 +9,6 @@ router.get('/', requireLogin, (req, res, next) => {
 });
 router.get('/about',requireLogin, (req, res, next) => {
   res.render('about', { title: 'About', user: req.session.user });
-})
+});
 
 module.exports = router;
