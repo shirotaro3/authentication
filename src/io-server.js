@@ -6,6 +6,7 @@ module.exports = (io) => {
 
     socket.userName = socket.handshake.session.user
     socket.use((packet, next) => {
+      console.log(packet);
       if(socket.handshake.session.user){return next();}
       io.to(socket.id).emit('redirect', '/users/login');
     });
@@ -147,19 +148,20 @@ module.exports = (io) => {
     // 接続開始時
     if(!socket.handshake.session.user){
       io.to(socket.id).emit('redirect', '/users/login');
+      return
     }
     joinTheRoom('public');
-    updateRoster();
     updateRoomMembers();
+    io.emit('connect user', socket.userName);
     
 
     // 切断時
     socket.on('disconnect', () => {
-      updateRoster();
       updateRoomMembers();
       if(socket.current){
         io.to(socket.current).emit('leave log', {userName: socket.userName,roomId: socket.current})
       };
+      io.emit('disconnect user', socket.userName);
     });
   });
 };

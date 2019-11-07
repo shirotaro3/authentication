@@ -13,7 +13,7 @@ $(function iochat() {
       list.forEach((name) => {
         if(name !== user){
           $('#roster')
-            .prepend($('<li>')
+            .prepend($('<li class="'+name+'rosterli">')
             .prepend(
             ($('<span>').text(name)),
             ($('<button class="inv-btn" id="'+name+'">').text('+')))
@@ -45,7 +45,7 @@ $(function iochat() {
     return false
   });
 
-  // ログ受信
+  // 退出メッセージ
   socket.on('leave log', (data) => {
     $('#messages').prepend($('<li class="info-log message">').text(data.userName+'さんが'+data.roomId+'から退室しました。'));
   });
@@ -132,5 +132,20 @@ $(function iochat() {
   // セッション切れ
   socket.on('redirect', (path) => {
     window.location.href = path;
+  });
+
+  // 他人ログイン
+  socket.on('connect user', (userName) => {
+    $('#roster')
+      .prepend($('<li class="'+userName+'rosterli">')
+      .prepend(
+        ($('<span>').text(userName)),
+        ($('<button class="inv-btn" id="'+userName+'">')
+      .text('+'))));
+  });
+
+  // 他人ログアウト
+  socket.on('disconnect user', (userName) => {
+    $('.'+userName+'rosterli').remove();
   })
 });
