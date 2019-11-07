@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 // セッションを確認するミドルウェア
-const requireLogin = require('../middlewares/require-login')
+const requireLogin = require('../src/require-login')
 
 /* GET home page. */
 router.get('/', requireLogin, (req, res, next) => {

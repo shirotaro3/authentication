@@ -2,17 +2,18 @@ const express = require('express');
 const router = express.Router();
 const csrf = require('csurf');
 const models = require('../models');
+const requireLogout = require('../src/require-logout');
 
 const csrfProtection = csrf({ cookie: true });
 const parseForm = express.urlencoded({ extended: false })
 
 // [get] signup
-router.get('/signup', csrfProtection, (req, res, next) => {
+router.get('/signup', requireLogout, csrfProtection, (req, res, next) => {
   res.render('signup',{title: "新規登録", csrfToken: req.csrfToken() });
 });
 
 // [get] login
-router.get('/login', csrfProtection, (req, res, next) => {
+router.get('/login', requireLogout, csrfProtection, (req, res, next) => {
   res.render('login',{title: "ログイン", csrfToken: req.csrfToken() });
 });
 

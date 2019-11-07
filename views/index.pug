@@ -3,27 +3,42 @@ extends layout
 block content
   h1.text-center= title
   .chat-links
-    span こんにちは、#{user}さん！
+    span こんばんは、
+    span#name #{user}
+    span さん！
     .float-right
       form(action='/users/logout' method='post')
         a(href='javascript:', onClick='forms[0].submit()' ) ログアウト
   .chat-room
-    .text-center
-      form(action="")
-        input(id="m" autocomplete="off" class="chat-form")
-        button 送信
-      .current-room.info-log
-        span 現在のルーム：
-        span#room-name public
-        
+    .forms-box
+      .chat-form-box
+        form(action="" id="chat")
+          input(id="m" autocomplete="off" class="chat-form" placeholder="メッセージを入力してください")
+          button 送信
+        .current-room.info-log
+          span 現在のルーム：
+          span#current-room.bold public
+      .room-form-box
+        form(action="" id="new-room")
+          input(id="r" autocomplete="off" class="room-form" placeholder="ルーム名を入力")
+          button 移動
+          p.info-log （空欄でpublicに移動）
     .chat-box
       .chat-logs
         ul(id="messages")
-          li.info-log 入室しました。
       .roster
-        p ログイン中
+        p.headline.info-log 招待する
         ul(id="roster")
+    .chat-box
+      .push-box
+        p.headline Invitations
+        .inner-box
+          ul#invitations
+      .push-box
+        p.headline RoomMembers
+        .inner-box
+          ul#room-members
 
   script(src='/socket.io/socket.io.js')
   script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js')
-  script(type='text/javascript' src='/javascripts/iochat.js')
+  script(type='text/javascript' src='/javascripts/io-client.js')
